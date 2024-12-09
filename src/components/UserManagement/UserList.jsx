@@ -10,7 +10,7 @@ const UserList = ({ users, loading, onEdit, onDelete, familyNameOptions, partOfF
 
   useEffect(() => {
     async function fetchData() {
-      const {data} = await axios.get('http://localhost:3000/families', {
+      const {data} = await axios.get('https://family-tree-backend-production-630e.up.railway.app/families', {
         headers: {
           'Content-Type': 'application/json'
         }
@@ -143,7 +143,7 @@ const UserList = ({ users, loading, onEdit, onDelete, familyNameOptions, partOfF
                         />
                         {editedUser.imageFile && (
                           <img
-                            src={editedUser.imageFile}
+                            src={`https://family-tree-backend-production-630e.up.railway.app/${editedUser.imageFile}`}
                             alt="Preview"
                             className="w-16 h-16 object-cover mt-2"
                           />
@@ -222,7 +222,7 @@ const UserList = ({ users, loading, onEdit, onDelete, familyNameOptions, partOfF
                       <td className="p-2 border border-gray-300">
                         {user.imageFile ? (
                           <img
-                            src={user.imageFile}
+                            src={`https://family-tree-backend-production-630e.up.railway.app/${user.imageFile}`}
                             alt="User"
                             className="w-16 h-16 object-cover rounded-full"
                           />
