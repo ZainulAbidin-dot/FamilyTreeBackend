@@ -13,7 +13,7 @@ const FamilyManagementPage = () => {
 
   useEffect(() => {
     async function fetchData() {
-      const {data} = await axios.get('http://localhost:3000/families', {
+      const {data} = await axios.get('https://family-tree-backend-production-630e.up.railway.app/families', {
         headers: {
           'Content-Type': 'application/json'
         }
@@ -35,7 +35,7 @@ const FamilyManagementPage = () => {
 
   const handleAddOrUpdateUser = async (userData) => {
     
-    const {data} = await axios.post('http://localhost:3000/families', {
+    const {data} = await axios.post('https://family-tree-backend-production-630e.up.railway.app/families', {
       family_head_name: userData.familyHeadName,
       family_name: userData.familyName
     }, {
@@ -64,7 +64,7 @@ const FamilyManagementPage = () => {
   };
 
   const handleEditUser = async (updatedUser) => {
-    const {data} = await axios.put(`http://localhost:3000/families/${updatedUser.id}`, {
+    const {data} = await axios.put(`https://family-tree-backend-production-630e.up.railway.app/families/${updatedUser.id}`, {
       family_head_name: updatedUser.familyHeadName,
       family_name: updatedUser.familyName
     }, {
@@ -85,7 +85,7 @@ const FamilyManagementPage = () => {
   };
 
   const handleDeleteUser = async (userId) => {
-    await axios.delete(`http://localhost:3000/families/${userId}`, {
+    await axios.delete(`https://family-tree-backend-production-630e.up.railway.app/families/${userId}`, {
       headers: {
         'Content-Type': 'application/json'
       }

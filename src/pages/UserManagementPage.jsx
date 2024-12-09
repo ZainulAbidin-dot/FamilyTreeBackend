@@ -18,13 +18,13 @@ const UserManagementPage = () => {
   useEffect(() => {
     async function fetchData() {
       setLoading(true);       
-      const familiesData = await axios.get('http://localhost:3000/families', {
+      const familiesData = await axios.get('https://family-tree-backend-production-630e.up.railway.app/families', {
         headers: {
           'Content-Type': 'application/json'
         }
       });
 
-      const {data} = await axios.get('http://localhost:3000/family-members', {
+      const {data} = await axios.get('https://family-tree-backend-production-630e.up.railway.app/family-members', {
         headers: {
           'Content-Type': 'application/json'
         }
@@ -60,7 +60,7 @@ const UserManagementPage = () => {
 
   useEffect(() => {
     async function fetchData() {
-      const {data} = await axios.get('http://localhost:3000/families', {
+      const {data} = await axios.get('https://family-tree-backend-production-630e.up.railway.app/families', {
         headers: {
           'Content-Type': 'application/json'
         }
@@ -85,7 +85,7 @@ const UserManagementPage = () => {
     
     let partOfFamilyData = {};
     if(userData.partOfFamily !== "None" && userData.partOfFamily !== "" && userData.partOfFamily !== null ) {
-      const {data} = await axios.get(`http://localhost:3000/families-single?name=${userData.partOfFamily}`, {
+      const {data} = await axios.get(`https://family-tree-backend-production-630e.up.railway.app/families-single?name=${userData.partOfFamily}`, {
         headers: {
           'Content-Type': 'application/json'
         }
@@ -94,7 +94,7 @@ const UserManagementPage = () => {
       partOfFamilyData = data;
     }
 
-    const familyNameData = await axios.get(`http://localhost:3000/families-single?name=${userData.familyName}`, {
+    const familyNameData = await axios.get(`https://family-tree-backend-production-630e.up.railway.app/families-single?name=${userData.familyName}`, {
       headers: {
         'Content-Type': 'application/json'
       }
@@ -103,7 +103,7 @@ const UserManagementPage = () => {
     console.log(familyNameData);
     
 
-   const {data} = await axios.post('http://localhost:3000/family-members', {
+   const {data} = await axios.post('https://family-tree-backend-production-630e.up.railway.app/family-members', {
       name: userData.name,
       member_as: userData.memberAs,
       family_name: familyNameData.data.id,
@@ -139,7 +139,7 @@ const UserManagementPage = () => {
     console.log(updatedUser);
     let partOfFamilyData = {};
     if(updatedUser.partOfFamily !== "None" ) {
-      const {data} = await axios.get(`http://localhost:3000/families-single?name=${updatedUser.partOfFamily}`, {
+      const {data} = await axios.get(`https://family-tree-backend-production-630e.up.railway.app/families-single?name=${updatedUser.partOfFamily}`, {
         headers: {
           'Content-Type': 'application/json'
         }
@@ -148,13 +148,13 @@ const UserManagementPage = () => {
       partOfFamilyData = data;
     }
 
-    const familyNameData = await axios.get(`http://localhost:3000/families-single?name=${updatedUser.familyName}`, {
+    const familyNameData = await axios.get(`https://family-tree-backend-production-630e.up.railway.app/families-single?name=${updatedUser.familyName}`, {
       headers: {
         'Content-Type': 'application/json'
       }
     });
 
-    const {data} = await axios.put(`http://localhost:3000/family-members/${updatedUser.id}`, {
+    const {data} = await axios.put(`https://family-tree-backend-production-630e.up.railway.app/family-members/${updatedUser.id}`, {
       name: updatedUser.name,
       member_as: updatedUser.memberAs,
       family_name: familyNameData.data.id,
@@ -178,7 +178,7 @@ const UserManagementPage = () => {
   };
 
   const handleDeleteUser = async (userId) => {
-    await axios.delete(`http://localhost:3000/family-members/${userId}`, {
+    await axios.delete(`https://family-tree-backend-production-630e.up.railway.app/family-members/${userId}`, {
       headers: {
         'Content-Type': 'application/json'
       }

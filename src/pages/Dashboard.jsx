@@ -35,13 +35,13 @@ const Dashboard = ({ exportCount, importCount, userCount }) => {
   
   useEffect(() => {
     async function fetchData() {
-      const {data} = await axios.get('http://localhost:3000/families', {
+      const {data} = await axios.get('https://family-tree-backend-production-630e.up.railway.app/families', {
         headers: {
           'Content-Type': 'application/json'
         }
       });
 
-      const familyMembersData = await axios.get('http://localhost:3000/family-members', {
+      const familyMembersData = await axios.get('https://family-tree-backend-production-630e.up.railway.app/family-members', {
         headers: {
           'Content-Type': 'application/json'
         }
