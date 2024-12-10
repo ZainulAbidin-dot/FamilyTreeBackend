@@ -145,7 +145,7 @@ const UserList = ({ users, loading, onEdit, onDelete, familyNameOptions, partOfF
                         />
                         {editedUser.imageFile && (
                           <img
-                            src={editedUser.imageFile.startsWith('data:image/jpeg;base64') ? editedUser.imageFile : `${BACKEND_URL}/${editedUser.imageFile}`}
+                            src={editedUser.imageFile.startsWith('data:image') ? editedUser.imageFile : `${BACKEND_URL}/${editedUser.imageFile}`}
                             alt="Preview"
                             className="w-16 h-16 object-cover mt-2"
                           />
@@ -224,7 +224,7 @@ const UserList = ({ users, loading, onEdit, onDelete, familyNameOptions, partOfF
                       <td className="p-2 border border-gray-300">
                         {user.imageFile ? (
                           <img
-                            src={user.imageFile.startsWith('data:image/jpeg;base64') ? user.imageFile : `${BACKEND_URL}/${user.imageFile}`}
+                            src={user.imageFile.startsWith('data:image') ? user.imageFile : `${BACKEND_URL}/${user.imageFile}`}
                             alt="User"
                             className="w-16 h-16 object-cover rounded-full"
                           />
