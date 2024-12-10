@@ -31,7 +31,6 @@ const UserList = ({ users, onEdit, onDelete }) => {
     setEditedUser(null); // Clear the form state
   };
 
-  console.log(users)
   return (
     <motion.div
       className="p-4 bg-white shadow-md rounded-lg mt-6"

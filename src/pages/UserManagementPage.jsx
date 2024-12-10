@@ -5,6 +5,7 @@ import CsvImport from '../components/CsvImport';
 import MapWithPolygon from '../components/MapWithPolygon';
 import ExportButton from '../components/ExportButton/ExportButton';
 import axios from 'axios';
+import { axiosClient } from '../axios-client';
 
 const UserManagementPage = () => {
   const [users, setUsers] = useState([]);
@@ -18,13 +19,13 @@ const UserManagementPage = () => {
   useEffect(() => {
     async function fetchData() {
       setLoading(true);       
-      const familiesData = await axios.get('https://family-tree-backend-production-630e.up.railway.app/families', {
+      const familiesData = await axiosClient.get('/families', {
         headers: {
           'Content-Type': 'application/json'
         }
       });
 
-      const {data} = await axios.get('https://family-tree-backend-production-630e.up.railway.app/family-members', {
+      const {data} = await axiosClient.get('/family-members', {
         headers: {
           'Content-Type': 'application/json'
         }
@@ -49,7 +50,6 @@ const UserManagementPage = () => {
           imageFile: user.member_image
         }
       })
-      console.log(populateUser);
       setUsers(populateUser);
       setLoading(false)
     }
@@ -60,7 +60,7 @@ const UserManagementPage = () => {
 
   useEffect(() => {
     async function fetchData() {
-      const {data} = await axios.get('https://family-tree-backend-production-630e.up.railway.app/families', {
+      const {data} = await axiosClient.get('/families', {
         headers: {
           'Content-Type': 'application/json'
         }
@@ -72,7 +72,6 @@ const UserManagementPage = () => {
           familyName: user.family_name
         }
       })
-      console.log(populateUser);
       setFamiliesData(populateUser) 
     }
 
@@ -81,29 +80,29 @@ const UserManagementPage = () => {
   }, [])
 
   const handleAddOrUpdateUser = async (userData) => {
-    console.log(userData);
-    
+   
+    console.log(userData.partOfFamily)
     let partOfFamilyData = {};
     if(userData.partOfFamily !== "None" && userData.partOfFamily !== "" && userData.partOfFamily !== null ) {
-      const {data} = await axios.get(`https://family-tree-backend-production-630e.up.railway.app/families-single?name=${userData.partOfFamily}`, {
+      const {data} = await axiosClient.get(`/families-single?name=${userData.partOfFamily}`, {
         headers: {
           'Content-Type': 'application/json'
         }
-      });
+      }).catch(err => console.log(err));
 
       partOfFamilyData = data;
     }
 
-    const familyNameData = await axios.get(`https://family-tree-backend-production-630e.up.railway.app/families-single?name=${userData.familyName}`, {
+    const familyNameData = await axiosClient.get(`/families-single?name=${userData.familyName}`, {
       headers: {
         'Content-Type': 'application/json'
       }
-    });
+    }).catch(err => console.log(err));
 
     console.log(familyNameData);
     
 
-   const {data} = await axios.post('https://family-tree-backend-production-630e.up.railway.app/family-members', {
+   const {data} = await axiosClient.post('/family-members', {
       name: userData.name,
       member_as: userData.memberAs,
       family_name: familyNameData.data.id,
@@ -113,7 +112,7 @@ const UserManagementPage = () => {
       headers: {
         'Content-Type': 'application/json'
       }
-    });
+    }).catch(err => console.log(err));
     
     alert('Family Member Added Successfully');
    
@@ -139,7 +138,7 @@ const UserManagementPage = () => {
     console.log(updatedUser);
     let partOfFamilyData = {};
     if(updatedUser.partOfFamily !== "None" ) {
-      const {data} = await axios.get(`https://family-tree-backend-production-630e.up.railway.app/families-single?name=${updatedUser.partOfFamily}`, {
+      const {data} = await axiosClient.get(`/families-single?name=${updatedUser.partOfFamily}`, {
         headers: {
           'Content-Type': 'application/json'
         }
@@ -148,13 +147,13 @@ const UserManagementPage = () => {
       partOfFamilyData = data;
     }
 
-    const familyNameData = await axios.get(`https://family-tree-backend-production-630e.up.railway.app/families-single?name=${updatedUser.familyName}`, {
+    const familyNameData = await axiosClient.get(`/families-single?name=${updatedUser.familyName}`, {
       headers: {
         'Content-Type': 'application/json'
       }
     });
 
-    const {data} = await axios.put(`https://family-tree-backend-production-630e.up.railway.app/family-members/${updatedUser.id}`, {
+    const {data} = await axiosClient.put(`/family-members/${updatedUser.id}`, {
       name: updatedUser.name,
       member_as: updatedUser.memberAs,
       family_name: familyNameData.data.id,
@@ -178,7 +177,7 @@ const UserManagementPage = () => {
   };
 
   const handleDeleteUser = async (userId) => {
-    await axios.delete(`https://family-tree-backend-production-630e.up.railway.app/family-members/${userId}`, {
+    await axiosClient.delete(`/family-members/${userId}`, {
       headers: {
         'Content-Type': 'application/json'
       }

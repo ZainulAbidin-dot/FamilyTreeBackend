@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import imageCompression from 'browser-image-compression'; 
 import axios from 'axios';
+import { axiosClient, BACKEND_URL } from '../../axios-client';
 
 const UserList = ({ users, loading, onEdit, onDelete, familyNameOptions, partOfFamilyOptions }) => {
   const [editingUserId, setEditingUserId] = useState(null);
@@ -10,7 +11,7 @@ const UserList = ({ users, loading, onEdit, onDelete, familyNameOptions, partOfF
 
   useEffect(() => {
     async function fetchData() {
-      const {data} = await axios.get('https://family-tree-backend-production-630e.up.railway.app/families', {
+      const {data} = await axiosClient.get('/families', {
         headers: {
           'Content-Type': 'application/json'
         }
@@ -22,7 +23,6 @@ const UserList = ({ users, loading, onEdit, onDelete, familyNameOptions, partOfF
           familyName: user.family_name
         }
       })
-      console.log(populateUser);
       setFamiliesData(populateUser) 
     }
 
@@ -75,6 +75,7 @@ const UserList = ({ users, loading, onEdit, onDelete, familyNameOptions, partOfF
   
 
   const handleSave = () => {
+    console.log(editedUser)
     if (editedUser) {
       onEdit(editedUser); // Pass the updated user to the parent component
       setEditingUserId(null); // Exit edit mode
@@ -98,6 +99,7 @@ const UserList = ({ users, loading, onEdit, onDelete, familyNameOptions, partOfF
     { value: 'Matriarch_Mother', label: 'Matriarch Mother' },
   ];
 
+  console.log(editedUser)
   return (
     <motion.div
       className="p-4 bg-white shadow-md rounded-lg mt-6"
@@ -143,7 +145,7 @@ const UserList = ({ users, loading, onEdit, onDelete, familyNameOptions, partOfF
                         />
                         {editedUser.imageFile && (
                           <img
-                            src={`https://family-tree-backend-production-630e.up.railway.app/${editedUser.imageFile}`}
+                            src={editedUser.imageFile.startsWith('data:image/jpeg;base64') ? editedUser.imageFile : `${BACKEND_URL}/${editedUser.imageFile}`}
                             alt="Preview"
                             className="w-16 h-16 object-cover mt-2"
                           />
@@ -175,7 +177,7 @@ const UserList = ({ users, loading, onEdit, onDelete, familyNameOptions, partOfF
                       <td className="p-2 border border-gray-300">
                         <select
                           name="familyName"
-                          value={familyNameOptions[0].value}
+                          value={editedUser.familyName.value}
                           onChange={handleInputChange}
                           className="w-full p-1 border border-gray-300 rounded"
                         >
@@ -189,7 +191,7 @@ const UserList = ({ users, loading, onEdit, onDelete, familyNameOptions, partOfF
                       <td className="p-2 border border-gray-300">
                         <select
                           name="partOfFamily"
-                          value={partOfFamilyOptions[0].value}
+                          defaultValue={editedUser.partOfFamily.value}
                           onChange={handleInputChange}
                           className="w-full p-1 border border-gray-300 rounded"
                         >
@@ -222,7 +224,7 @@ const UserList = ({ users, loading, onEdit, onDelete, familyNameOptions, partOfF
                       <td className="p-2 border border-gray-300">
                         {user.imageFile ? (
                           <img
-                            src={`https://family-tree-backend-production-630e.up.railway.app/${user.imageFile}`}
+                            src={user.imageFile.startsWith('data:image/jpeg;base64') ? user.imageFile : `${BACKEND_URL}/${user.imageFile}`}
                             alt="User"
                             className="w-16 h-16 object-cover rounded-full"
                           />

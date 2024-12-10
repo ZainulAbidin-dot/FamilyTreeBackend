@@ -4,6 +4,7 @@ import UserList from '../components/FamilyManagement/UserList';
 import CsvImport from '../components/CsvImport';
 import ExportButton from '../components/ExportButton/ExportButton';
 import axios from 'axios';
+import { axiosClient } from '../axios-client';
 
 const FamilyManagementPage = () => {
   const [users, setUsers] = useState([]);
@@ -13,7 +14,7 @@ const FamilyManagementPage = () => {
 
   useEffect(() => {
     async function fetchData() {
-      const {data} = await axios.get('https://family-tree-backend-production-630e.up.railway.app/families', {
+      const {data} = await axiosClient.get('/families', {
         headers: {
           'Content-Type': 'application/json'
         }
@@ -25,7 +26,6 @@ const FamilyManagementPage = () => {
           familyName: user.family_name
         }
       })
-      console.log(populateUser);
       setUsers(populateUser) 
     }
 
@@ -35,7 +35,7 @@ const FamilyManagementPage = () => {
 
   const handleAddOrUpdateUser = async (userData) => {
     
-    const {data} = await axios.post('https://family-tree-backend-production-630e.up.railway.app/families', {
+    const {data} = await axiosClient.post('/families', {
       family_head_name: userData.familyHeadName,
       family_name: userData.familyName
     }, {
@@ -64,7 +64,7 @@ const FamilyManagementPage = () => {
   };
 
   const handleEditUser = async (updatedUser) => {
-    const {data} = await axios.put(`https://family-tree-backend-production-630e.up.railway.app/families/${updatedUser.id}`, {
+    const {data} = await axiosClient.put(`/families/${updatedUser.id}`, {
       family_head_name: updatedUser.familyHeadName,
       family_name: updatedUser.familyName
     }, {
@@ -85,7 +85,7 @@ const FamilyManagementPage = () => {
   };
 
   const handleDeleteUser = async (userId) => {
-    await axios.delete(`https://family-tree-backend-production-630e.up.railway.app/families/${userId}`, {
+    await axiosClient.delete(`/families/${userId}`, {
       headers: {
         'Content-Type': 'application/json'
       }

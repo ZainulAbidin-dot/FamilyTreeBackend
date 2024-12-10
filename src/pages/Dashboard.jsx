@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import axios from 'axios';
+import { axiosClient } from '../axios-client';
 
 const Dashboard = ({ exportCount, importCount, userCount }) => {
   const containerVariants = {
@@ -35,13 +36,13 @@ const Dashboard = ({ exportCount, importCount, userCount }) => {
   
   useEffect(() => {
     async function fetchData() {
-      const {data} = await axios.get('https://family-tree-backend-production-630e.up.railway.app/families', {
+      const {data} = await axiosClient.get('/families', {
         headers: {
           'Content-Type': 'application/json'
         }
       });
 
-      const familyMembersData = await axios.get('https://family-tree-backend-production-630e.up.railway.app/family-members', {
+      const familyMembersData = await axiosClient.get('/family-members', {
         headers: {
           'Content-Type': 'application/json'
         }
