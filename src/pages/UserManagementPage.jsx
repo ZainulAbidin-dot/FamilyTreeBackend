@@ -84,7 +84,7 @@ const UserManagementPage = () => {
     console.log(userData.partOfFamily)
     let partOfFamilyData = {};
     if(userData.partOfFamily !== "None" && userData.partOfFamily !== "" && userData.partOfFamily !== null ) {
-      const {data} = await axiosClient.get(`/families-single?name=${userData.partOfFamily}`, {
+      const {data} = await axiosClient.get(`/families-single?name=${encodeURIComponent(userData.partOfFamily)}`, {
         headers: {
           'Content-Type': 'application/json'
         }
@@ -93,7 +93,7 @@ const UserManagementPage = () => {
       partOfFamilyData = data;
     }
 
-    const familyNameData = await axiosClient.get(`/families-single?name=${userData.familyName}`, {
+    const familyNameData = await axiosClient.get(`/families-single?name=${encodeURIComponent(userData.familyName)}`, {
       headers: {
         'Content-Type': 'application/json'
       }
@@ -138,7 +138,7 @@ const UserManagementPage = () => {
     console.log(updatedUser);
     let partOfFamilyData = {};
     if(updatedUser.partOfFamily !== "None" ) {
-      const {data} = await axiosClient.get(`/families-single?name=${updatedUser.partOfFamily}`, {
+      const {data} = await axiosClient.get(`/families-single?name=${encodeURIComponent(updatedUser.partOfFamily)}`, {
         headers: {
           'Content-Type': 'application/json'
         }
@@ -147,7 +147,7 @@ const UserManagementPage = () => {
       partOfFamilyData = data;
     }
 
-    const familyNameData = await axiosClient.get(`/families-single?name=${updatedUser.familyName}`, {
+    const familyNameData = await axiosClient.get(`/families-single?name=${encodeURIComponent(updatedUser.familyName)}`, {
       headers: {
         'Content-Type': 'application/json'
       }
