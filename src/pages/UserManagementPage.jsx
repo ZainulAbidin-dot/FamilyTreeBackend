@@ -243,7 +243,7 @@ const UserManagementPage = () => {
         partOfFamilyOptions={partOfFamilyOptions}
       />
 
-      {/* <ExportButton data={users} /> */}
+      <ExportButton data={users} />
     </div>
   );
 };
