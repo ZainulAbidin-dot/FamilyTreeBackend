@@ -1,4 +1,5 @@
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
 import Header from './components/Header/Header';
 import Dashboard from './pages/Dashboard';
 import UserManagementPage from './pages/UserManagementPage';
@@ -17,6 +18,7 @@ function App() {
           </Routes>
         </main>
       </div>
+      <Toaster />
     </Router>
   );
 }

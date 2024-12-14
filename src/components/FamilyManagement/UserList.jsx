@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 
-const UserList = ({ users, onEdit, onDelete }) => {
+const UserList = ({ users, onEdit, onDelete, refetching, pendingChanges }) => {
   const [editingUserId, setEditingUserId] = useState(null);
   const [editedUser, setEditedUser] = useState(null);
 
@@ -18,9 +18,9 @@ const UserList = ({ users, onEdit, onDelete }) => {
     }));
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (editedUser) {
-      onEdit(editedUser); // Pass the updated user to the parent component
+      await onEdit(editedUser); // Pass the updated user to the parent component
       setEditingUserId(null); // Exit edit mode
       setEditedUser(null); // Clear the form state
     }
@@ -45,7 +45,9 @@ const UserList = ({ users, onEdit, onDelete }) => {
         </p>
       ) : (
         <div className='overflow-x-auto'>
-          <table className='w-full border-collapse'>
+          <table
+            className={`w-full border-collapse ${refetching ? 'animate-pulse' : ''}`}
+          >
             <thead>
               <tr className='bg-gray-100'>
                 <th className='p-2 border border-gray-300 text-left'>ID</th>
@@ -96,13 +98,15 @@ const UserList = ({ users, onEdit, onDelete }) => {
                       <td className='p-2 border border-gray-300'>
                         <button
                           onClick={handleSave}
-                          className='mr-2 text-green-600 hover:underline'
+                          className='mr-2 text-green-600 hover:underline disabled:opacity-50 disabled:cursor-not-allowed'
+                          disabled={pendingChanges}
                         >
                           Save
                         </button>
                         <button
                           onClick={handleCancel}
-                          className='text-red-600 hover:underline'
+                          className='text-red-600 hover:underline disabled:opacity-50 disabled:cursor-not-allowed'
+                          disabled={pendingChanges}
                         >
                           Cancel
                         </button>
@@ -119,13 +123,15 @@ const UserList = ({ users, onEdit, onDelete }) => {
                       <td className='p-2 border border-gray-300'>
                         <button
                           onClick={() => handleEditClick(user)}
-                          className='mr-2 text-blue-600 hover:underline'
+                          className='mr-2 text-blue-600 hover:underline disabled:opacity-50 disabled:cursor-not-allowed'
+                          disabled={pendingChanges}
                         >
                           Edit
                         </button>
                         <button
                           onClick={() => onDelete(user.id)}
-                          className='text-red-600 hover:underline'
+                          className='text-red-600 hover:underline disabled:opacity-50 disabled:cursor-not-allowed'
+                          disabled={pendingChanges}
                         >
                           Delete
                         </button>

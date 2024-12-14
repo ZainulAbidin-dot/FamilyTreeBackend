@@ -1,17 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import UserForm from '../components/FamilyManagement/UserForm';
 import UserList from '../components/FamilyManagement/UserList';
 import { axiosClient } from '../axios-client';
 import { useAxiosQuery } from '../hooks/useAxiosQuery';
 import { Loader } from '../components/loader/Loader';
+import { toast } from 'react-hot-toast';
 
 const FamilyManagementPage = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [isFormVisible, setIsFormVisible] = useState(false); // Track the visibility of the form
+  const [pendingChanges, setPendingChanges] = useState(false);
 
   const {
     data: users,
-    setData: setUsers,
+    refetch,
+    refetching,
     loading,
   } = useAxiosQuery('/families', {
     transformData: (data) => {
@@ -26,45 +29,68 @@ const FamilyManagementPage = () => {
     },
   });
 
-  const handleAddOrUpdateUser = async (userData) => {
-    const { data } = await axiosClient.post('/families', {
+  const handleAddUser = async (userData) => {
+    setPendingChanges(true);
+    const promise = axiosClient.post('/families', {
       family_head_name: userData.familyHeadName,
       family_name: userData.familyName,
+      order: userData.order,
     });
 
-    alert('Family Added Successfully');
-    if (selectedUser) {
-      setUsers((prevUsers) =>
-        prevUsers.map((user) =>
-          user.id === selectedUser.id ? { ...user, ...userData } : user
-        )
-      );
-    } else {
-      setUsers((prevUsers) => [...prevUsers, { id: data.id, ...userData }]);
-    }
-    setSelectedUser(null);
-    setIsFormVisible(false); // Hide form after adding/updating the user
+    toast
+      .promise(promise, {
+        loading: 'Adding Family...',
+        success: 'Family Added Successfully',
+        error: 'Error Adding Family',
+      })
+      .then(() => {
+        refetch();
+      })
+      .finally(() => {
+        setPendingChanges(false);
+        setSelectedUser(null);
+        setIsFormVisible(false);
+      });
   };
 
   const handleEditUser = async (updatedUser) => {
-    await axiosClient.put(`/families/${updatedUser.id}`, {
+    setPendingChanges(true);
+
+    const promise = axiosClient.put(`/families/${updatedUser.id}`, {
       family_head_name: updatedUser.familyHeadName,
       family_name: updatedUser.familyName,
       order: updatedUser.order,
     });
 
-    alert('Family Updated Successfully');
-    // setSelectedUser(editUser);
-    setUsers((prevUsers) =>
-      prevUsers.map((user) => (user.id === updatedUser.id ? updatedUser : user))
-    );
+    toast
+      .promise(promise, {
+        loading: 'Updating Family...',
+        success: 'Family Updated Successfully',
+        error: 'Error Updating Family',
+      })
+      .then(() => {
+        refetch();
+      })
+      .finally(() => {
+        setPendingChanges(false);
+      });
   };
 
   const handleDeleteUser = async (userId) => {
-    await axiosClient.delete(`/families/${userId}`);
-
-    alert('Family Deleted Successfully');
-    setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
+    setPendingChanges(true);
+    const promise = axiosClient.delete(`/families/${userId}`);
+    toast
+      .promise(promise, {
+        loading: 'Deleting Family...',
+        success: 'Family Deleted Successfully',
+        error: 'Error Deleting Family',
+      })
+      .then(() => {
+        refetch();
+      })
+      .finally(() => {
+        setPendingChanges(false);
+      });
   };
 
   const handleCancelEdit = () => {
@@ -79,31 +105,33 @@ const FamilyManagementPage = () => {
   return (
     <div className='container mx-auto p-6'>
       <h1 className='text-3xl font-bold mb-4'>Family Management</h1>
-      {/* <CsvImport onDataImported={handleDataImport} /> */}
 
-      {/* Button to add a new user */}
       <button
         onClick={() => {
           setIsFormVisible((prev) => !prev);
-          setSelectedUser(null); // Make sure selectedUser is null when adding new user
+          setSelectedUser(null);
         }}
         className='my-4 p-2 bg-blue-500 text-white rounded'
       >
         Add New Family
       </button>
 
-      {/* Show the UserForm when the form visibility is true */}
       {isFormVisible && (
         <UserForm
           user={selectedUser}
-          onSave={handleAddOrUpdateUser}
+          onSave={handleAddUser}
           onCancel={handleCancelEdit}
+          pendingChanges={pendingChanges}
         />
       )}
 
-      <UserList users={users} onEdit={handleEditUser} onDelete={handleDeleteUser} />
-
-      {/* <ExportButton data={users} /> */}
+      <UserList
+        users={users}
+        onEdit={handleEditUser}
+        onDelete={handleDeleteUser}
+        refetching={refetching}
+        pendingChanges={pendingChanges}
+      />
     </div>
   );
 };

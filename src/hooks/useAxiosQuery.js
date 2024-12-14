@@ -3,35 +3,60 @@ import { axiosClient } from '../axios-client';
 
 export const useAxiosQuery = (url, options) => {
   const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
+
+  /**
+   * Possible states:
+   * - loading
+   * - error
+   * - success
+   * - refetching
+   */
+  const [queryState, setQueryState] = useState('idle');
+
   const abortControllerRef = useRef();
 
-  useEffect(() => {
+  async function fetchData() {
+    if (queryState === 'loading' && abortControllerRef?.current) {
+      abortControllerRef.current.abort();
+    }
+
     abortControllerRef.current = new AbortController();
-    abortControllerRef.current.signal.onabort = () => {
-      console.log('Aborted!');
-    };
-    async function fetchData() {
-      setLoading(true);
-      const { data } = await axiosClient.get(url, {
+
+    try {
+      setQueryState(data ? 'refetching' : 'loading');
+      const response = await axiosClient.get(url, {
         signal: abortControllerRef.current.signal,
       });
 
-      if (options?.transformData) {
-        setData(options.transformData(data));
+      if (response.status >= 200 && response.status < 300) {
+        setData(
+          options?.transformData ? options.transformData(response.data) : response.data
+        );
+        setQueryState('success');
       } else {
-        setData(data);
+        throw new Error('Request failed');
       }
-
-      setLoading(false);
+    } catch (error) {
+      if (error.name !== 'CanceledError') {
+        setQueryState('error');
+        console.log('An error occurred while fetching data:', error);
+      }
     }
+  }
 
+  useEffect(() => {
     fetchData();
 
     return () => {
-      abortControllerRef.current.abort();
+      abortControllerRef?.current?.abort();
     };
   }, [url]);
 
-  return { data, setData, loading };
+  return {
+    data,
+    setData,
+    loading: (queryState === 'loading' || queryState === 'idle') && data == null,
+    refetching: queryState === 'refetching',
+    refetch: fetchData,
+  };
 };

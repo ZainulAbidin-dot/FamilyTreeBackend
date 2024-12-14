@@ -1,16 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import imageCompression from 'browser-image-compression';
-import axios from 'axios';
-import { axiosClient, BACKEND_URL } from '../../axios-client';
+import { BACKEND_URL } from '../../axios-client';
 
 const UserList = ({
   users,
-  loading,
   onEdit,
   onDelete,
   familyNameOptions,
   partOfFamilyOptions,
+  refetching,
+  pendingChanges,
+  familiesNameToId,
 }) => {
   const [editingUserId, setEditingUserId] = useState(null);
   const [editedUser, setEditedUser] = useState(null);
@@ -59,6 +60,7 @@ const UserList = ({
     console.log(editedUser);
     if (editedUser) {
       onEdit(editedUser); // Pass the updated user to the parent component
+
       setEditingUserId(null); // Exit edit mode
       setEditedUser(null); // Clear the form state
     }
@@ -80,7 +82,6 @@ const UserList = ({
     { value: 'Matriarch_Mother', label: 'Matriarch Mother' },
   ];
 
-  console.log(editedUser);
   return (
     <motion.div
       className='p-4 bg-white shadow-md rounded-lg mt-6'
@@ -91,14 +92,13 @@ const UserList = ({
       <h2 className='text-2xl font-semibold mb-4'>User List</h2>
       {users.length === 0 ? (
         <p className='text-gray-600'>
-          {' '}
-          {loading
-            ? 'Loading...'
-            : 'No users available. Add some users to see them here.'}
+          No users available. Add some users to see them here
         </p>
       ) : (
         <div className='overflow-x-auto'>
-          <table className='w-full border-collapse'>
+          <table
+            className={`w-full border-collapse ${refetching ? 'animate-pulse' : ''}`}
+          >
             <thead>
               <tr className='bg-gray-100'>
                 <th className='p-2 border border-gray-300 text-left'>ID</th>
@@ -128,6 +128,7 @@ const UserList = ({
                           accept='image/*'
                           onChange={handleImageChange}
                           className='w-full p-1 border border-gray-300 rounded'
+                          readOnly={pendingChanges}
                         />
                         {editedUser.imageFile && (
                           <img
@@ -148,6 +149,7 @@ const UserList = ({
                           value={editedUser.name}
                           onChange={handleInputChange}
                           className='w-full p-1 border border-gray-300 rounded'
+                          readOnly={pendingChanges}
                         />
                       </td>
                       <td className='p-2 border border-gray-300'>
@@ -156,6 +158,7 @@ const UserList = ({
                           value={editedUser.memberAs} // Controlled value
                           onChange={handleInputChange} // Handle change
                           className='w-full p-1 border border-gray-300 rounded'
+                          readOnly={pendingChanges}
                         >
                           {memberAsOptions.map((option) => (
                             <option key={option.value} value={option.value}>
@@ -167,9 +170,10 @@ const UserList = ({
                       <td className='p-2 border border-gray-300'>
                         <select
                           name='familyName'
-                          value={editedUser.familyName.value}
+                          value={familiesNameToId.get(editedUser.familyName)}
                           onChange={handleInputChange}
                           className='w-full p-1 border border-gray-300 rounded'
+                          readOnly={pendingChanges}
                         >
                           {familyNameOptions.map((familyName) => (
                             <option key={familyName.value} value={familyName.value}>
@@ -181,9 +185,14 @@ const UserList = ({
                       <td className='p-2 border border-gray-300'>
                         <select
                           name='partOfFamily'
-                          defaultValue={editedUser.partOfFamily.value}
+                          value={
+                            editedUser.partOfFamily === 'None'
+                              ? 'None'
+                              : familiesNameToId.get(editedUser.partOfFamily)
+                          }
                           onChange={handleInputChange}
                           className='w-full p-1 border border-gray-300 rounded'
+                          readOnly={pendingChanges}
                         >
                           {partOfFamilyOptions.map((partOfFamily) => (
                             <option key={partOfFamily.value} value={partOfFamily.value}>
@@ -195,13 +204,15 @@ const UserList = ({
                       <td className='p-2 border border-gray-300'>
                         <button
                           onClick={handleSave}
-                          className='mr-2 text-green-600 hover:underline'
+                          className='mr-2 text-green-600 hover:underline disabled:opacity-50 disabled:cursor-not-allowed'
+                          disabled={pendingChanges}
                         >
                           Save
                         </button>
                         <button
                           onClick={handleCancel}
-                          className='text-red-600 hover:underline'
+                          className='text-red-600 hover:underline disabled:opacity-50 disabled:cursor-not-allowed'
+                          disabled={pendingChanges}
                         >
                           Cancel
                         </button>
@@ -238,13 +249,15 @@ const UserList = ({
                       <td className='p-2 border border-gray-300'>
                         <button
                           onClick={() => handleEditClick(user)}
-                          className='mr-2 text-blue-600 hover:underline'
+                          className='mr-2 text-blue-600 hover:underline disabled:opacity-50 disabled:cursor-not-allowed'
+                          disabled={pendingChanges}
                         >
                           Edit
                         </button>
                         <button
                           onClick={() => onDelete(user.id)}
-                          className='text-red-600 hover:underline'
+                          className='text-red-600 hover:underline disabled:opacity-50 disabled:cursor-not-allowed'
+                          disabled={pendingChanges}
                         >
                           Delete
                         </button>
