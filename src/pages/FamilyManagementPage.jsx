@@ -59,7 +59,7 @@ const FamilyManagementPage = () => {
     const promise = axiosClient.put(`/families/${updatedUser.id}`, {
       family_head_name: updatedUser.familyHeadName,
       family_name: updatedUser.familyName,
-      order: updatedUser.order,
+      order: parseInt(updatedUser.order),
     });
 
     toast

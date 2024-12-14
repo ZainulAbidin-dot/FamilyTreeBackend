@@ -66,7 +66,7 @@ const UserForm = ({ user, onSave, onCancel, pendingChanges }) => {
 
         <div className='mb-4'>
           <label htmlFor='order' className='block text-sm font-medium text-gray-700'>
-            Family Name
+            Order
           </label>
           <input
             type='number'

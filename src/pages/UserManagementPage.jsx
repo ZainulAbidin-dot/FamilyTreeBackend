@@ -97,9 +97,9 @@ const UserManagementPage = () => {
     const promise = axiosClient.put(`/family-members/${updatedUser.id}`, {
       name: updatedUser.name,
       member_as: updatedUser.memberAs,
-      family_name: updatedUser.familyName,
+      family_name: parseInt(updatedUser.familyName),
       sub_family_of:
-        updatedUser.partOfFamily === 'None' ? null : updatedUser.partOfFamily,
+        updatedUser.partOfFamily === 'None' ? null : parseInt(updatedUser.partOfFamily),
       member_image: updatedUser.imageFile,
     });
 
@@ -164,7 +164,7 @@ const UserManagementPage = () => {
       {isFormVisible && (
         <UserForm
           onSave={handleAddUser}
-          onCancel={handleCancelEdit}
+          onCancel={() => setIsFormVisible(false)}
           familyNameOptions={familyNameOptions}
           partOfFamilyOptions={partOfFamilyOptions}
           pendingChanges={pendingChanges}
