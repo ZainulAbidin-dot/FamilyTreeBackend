@@ -2,16 +2,19 @@ import React, { useEffect, useState } from 'react';
 import UserForm from '../components/FamilyManagement/UserForm';
 import UserList from '../components/FamilyManagement/UserList';
 import { axiosClient } from '../axios-client';
+import { useAxiosQuery } from '../hooks/useAxiosQuery';
 
 const FamilyManagementPage = () => {
-  const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [isFormVisible, setIsFormVisible] = useState(false); // Track the visibility of the form
 
-  useEffect(() => {
-    async function fetchData() {
-      const { data } = await axiosClient.get('/families');
-      const populateUser = data.map((user) => {
+  const {
+    data: users,
+    setData: setUsers,
+    loading,
+  } = useAxiosQuery('/families', {
+    transformData: (data) => {
+      return data.map((user) => {
         return {
           id: user.id,
           familyHeadName: user.family_head_name,
@@ -19,11 +22,8 @@ const FamilyManagementPage = () => {
           order: user.order,
         };
       });
-      setUsers(populateUser);
-    }
-
-    fetchData();
-  }, []);
+    },
+  });
 
   const handleAddOrUpdateUser = async (userData) => {
     const { data } = await axiosClient.post('/families', {
@@ -71,8 +71,12 @@ const FamilyManagementPage = () => {
     setIsFormVisible(false); // Hide form when canceling
   };
 
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
-    <div className='container mx-auto mt-20 p-6'>
+    <div className='container mx-auto p-6'>
       <h1 className='text-3xl font-bold mb-4'>Family Management</h1>
       {/* <CsvImport onDataImported={handleDataImport} /> */}
 

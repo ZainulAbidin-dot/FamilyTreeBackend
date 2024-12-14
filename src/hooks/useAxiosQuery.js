@@ -1,7 +1,7 @@
 import { useRef, useEffect, useState } from 'react';
 import { axiosClient } from '../axios-client';
 
-export const useAxiosQuery = (url) => {
+export const useAxiosQuery = (url, options) => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const abortControllerRef = useRef();
@@ -16,7 +16,13 @@ export const useAxiosQuery = (url) => {
       const { data } = await axiosClient.get(url, {
         signal: abortControllerRef.current.signal,
       });
-      setData(data);
+
+      if (options?.transformData) {
+        setData(options.transformData(data));
+      } else {
+        setData(data);
+      }
+
       setLoading(false);
     }
 
@@ -27,5 +33,5 @@ export const useAxiosQuery = (url) => {
     };
   }, [url]);
 
-  return { data, loading };
+  return { data, setData, loading };
 };

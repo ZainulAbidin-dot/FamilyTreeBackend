@@ -7,19 +7,15 @@ import FamilyManagementPage from './pages/FamilyManagementPage';
 function App() {
   return (
     <Router>
-      <div className='flex flex-col md:flex-row min-h-screen'>
-        <div className='flex-1 flex flex-col'>
-          <Header />
-          <div className='flex flex-grow'>
-            <main className='flex-grow p-4'>
-              <Routes>
-                <Route path='/' element={<Dashboard />} />
-                <Route path='/user-management' element={<UserManagementPage />} />
-                <Route path='/family-management' element={<FamilyManagementPage />} />
-              </Routes>
-            </main>
-          </div>
-        </div>
+      <div className='h-screen flex flex-col'>
+        <Header />
+        <main className='overflow-y-auto flex-grow'>
+          <Routes>
+            <Route path='/' element={<Dashboard />} />
+            <Route path='/user-management' element={<UserManagementPage />} />
+            <Route path='/family-management' element={<FamilyManagementPage />} />
+          </Routes>
+        </main>
       </div>
     </Router>
   );

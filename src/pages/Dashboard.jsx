@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { useAxiosQuery } from '../hooks/useAxiosQuery';
+import { Loader } from '../components/loader/loader';
 
 const Dashboard = () => {
   const containerVariants = {
@@ -30,9 +31,13 @@ const Dashboard = () => {
 
   const { data: overview, loading } = useAxiosQuery('/overview');
 
+  if (loading) {
+    return <Loader />;
+  }
+
   return (
     <motion.div
-      className='container mx-auto mt-20 p-6'
+      className='container mx-auto p-6'
       variants={containerVariants}
       initial='hidden'
       animate='visible'

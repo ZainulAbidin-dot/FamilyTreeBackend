@@ -148,10 +148,6 @@ const UserManagementPage = () => {
     setIsFormVisible(false); // Hide form when canceling
   };
 
-  const handleDataImport = (importedData) => {
-    setUsers((prevUsers) => [...prevUsers, ...importedData]);
-  };
-
   const uniqueFamilyNames = [...new Set(familiesData.map((user) => user.familyName))];
   const uniquePartOfFamily = [
     'None',
@@ -168,9 +164,8 @@ const UserManagementPage = () => {
   }));
 
   return (
-    <div className='container mx-auto mt-20 p-6'>
+    <div className='container mx-auto p-6'>
       <h1 className='text-3xl font-bold mb-4'>Member Management</h1>
-      {/* <CsvImport onDataImported={handleDataImport} /> */}
 
       {/* Button to add a new user */}
       <button
