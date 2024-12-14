@@ -3,6 +3,7 @@ import UserForm from '../components/FamilyManagement/UserForm';
 import UserList from '../components/FamilyManagement/UserList';
 import { axiosClient } from '../axios-client';
 import { useAxiosQuery } from '../hooks/useAxiosQuery';
+import { Loader } from '../components/Loader';
 
 const FamilyManagementPage = () => {
   const [selectedUser, setSelectedUser] = useState(null);
@@ -72,7 +73,7 @@ const FamilyManagementPage = () => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loader />;
   }
 
   return (

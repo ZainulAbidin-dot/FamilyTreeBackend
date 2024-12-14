@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { useAxiosQuery } from '../hooks/useAxiosQuery';
-import { Loader } from '../components/loader/loader';
+import { Loader } from '../components/loader/Loader';
 
 const Dashboard = () => {
   const containerVariants = {
