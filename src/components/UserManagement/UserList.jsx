@@ -8,10 +8,10 @@ const UserList = ({
   onEdit,
   onDelete,
   familyNameOptions,
-  partOfFamilyOptions,
+  parentFamilyOptions,
   refetching,
   pendingChanges,
-  familiesNameToId,
+  familiesMap,
 }) => {
   const [editingUserId, setEditingUserId] = useState(null);
   const [editedUser, setEditedUser] = useState(null);
@@ -169,8 +169,8 @@ const UserList = ({
                       </td>
                       <td className='p-2 border border-gray-300'>
                         <select
-                          name='familyName'
-                          value={familiesNameToId.get(editedUser.familyName)}
+                          name='familyId'
+                          value={editedUser.familyId}
                           onChange={handleInputChange}
                           className='w-full p-1 border border-gray-300 rounded'
                           readOnly={pendingChanges}
@@ -184,19 +184,19 @@ const UserList = ({
                       </td>
                       <td className='p-2 border border-gray-300'>
                         <select
-                          name='partOfFamily'
+                          name='parentFamily'
                           value={
-                            editedUser.partOfFamily === 'None'
+                            editedUser.parentFamily === null
                               ? 'None'
-                              : familiesNameToId.get(editedUser.partOfFamily)
+                              : editedUser.parentFamily
                           }
                           onChange={handleInputChange}
                           className='w-full p-1 border border-gray-300 rounded'
                           readOnly={pendingChanges}
                         >
-                          {partOfFamilyOptions.map((partOfFamily) => (
-                            <option key={partOfFamily.value} value={partOfFamily.value}>
-                              {partOfFamily.label}
+                          {parentFamilyOptions.map((option) => (
+                            <option key={option.value} value={option.value}>
+                              {option.label}
                             </option>
                           ))}
                         </select>
@@ -240,11 +240,13 @@ const UserList = ({
                       </td>
                       <td className='p-2 border border-gray-300'>{user.name}</td>
                       <td className='p-2 border border-gray-300'>{user.memberAs}</td>
-                      <td className='p-2 border border-gray-300'>{user.familyName}</td>
                       <td className='p-2 border border-gray-300'>
-                        {user.partOfFamily === null || user.partOfFamily === ''
+                        {familiesMap.get(user.familyId)}
+                      </td>
+                      <td className='p-2 border border-gray-300'>
+                        {user.parentFamily === null
                           ? 'None'
-                          : user.partOfFamily}
+                          : familiesMap.get(user.parentFamily)}
                       </td>
                       <td className='p-2 border border-gray-300'>
                         <button

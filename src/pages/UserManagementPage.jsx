@@ -26,22 +26,30 @@ const UserManagementPage = () => {
         return acc;
       }, new Map());
 
-      const familiesNameToId = data.reduce((acc, family) => {
-        acc.set(family.family_name, family.id);
-        return acc;
-      }, new Map());
-
-      return { users, familiesMap, familiesNameToId };
+      return { users, familiesMap };
     },
   });
 
   const {
-    data: rawFamilyMembers,
+    data: familyMembers,
     setData: setRawFamilyMembers,
     loading: familyMembersLoading,
     refetch,
     refetching,
-  } = useAxiosQuery('/family-members');
+  } = useAxiosQuery('/family-members', {
+    transformData: (data) => {
+      return data.map((user) => {
+        return {
+          id: user.id,
+          name: user.name,
+          memberAs: user.member_as,
+          familyId: user.family_id,
+          parentFamily: user.sub_family_of,
+          imageFile: user.member_image,
+        };
+      });
+    },
+  });
 
   const loading = familiesLoading || familyMembersLoading;
 
@@ -49,31 +57,14 @@ const UserManagementPage = () => {
 
   const families = familiesData.users;
   const familiesMap = familiesData.familiesMap;
-  const familiesNameToId = familiesData.familiesNameToId;
-
-  const familyMembers = rawFamilyMembers.map((user) => {
-    const familyName = familiesMap.get(user.family_id);
-    const parentFamilyName = user.sub_family_of
-      ? familiesMap.get(user.sub_family_of)
-      : 'None';
-
-    return {
-      id: user.id,
-      name: user.name,
-      memberAs: user.member_as,
-      familyName: familyName,
-      partOfFamily: parentFamilyName,
-      imageFile: user.member_image,
-    };
-  });
 
   const handleAddUser = async (userData) => {
     setPendingChanges(true);
     const promise = axiosClient.post('/family-members', {
       name: userData.name,
       member_as: userData.memberAs,
-      family_name: userData.familyName,
-      sub_family_of: userData.partOfFamily === 'None' ? null : userData.partOfFamily,
+      family_id: userData.familyId,
+      sub_family_of: userData.parentFamily === 'None' ? null : userData.parentFamily,
       member_image: userData.imageFile,
     });
 
@@ -94,13 +85,12 @@ const UserManagementPage = () => {
 
   const handleEditUser = async (updatedUser) => {
     setPendingChanges(true);
-
     const promise = axiosClient.put(`/family-members/${updatedUser.id}`, {
       name: updatedUser.name,
       member_as: updatedUser.memberAs,
-      family_name: parseInt(updatedUser.familyName),
+      family_id: parseInt(updatedUser.familyId),
       sub_family_of:
-        updatedUser.partOfFamily === 'None' ? null : parseInt(updatedUser.partOfFamily),
+        updatedUser.parentFamily === 'None' ? null : parseInt(updatedUser.parentFamily),
       member_image: updatedUser.imageFile,
     });
 
@@ -141,7 +131,7 @@ const UserManagementPage = () => {
     value: family.id,
   }));
 
-  const partOfFamilyOptions = [{ label: 'None', value: 'None' }, ...familyNameOptions];
+  const parentFamilyOptions = [{ label: 'None', value: 'None' }, ...familyNameOptions];
 
   return (
     <div className='container mx-auto p-6'>
@@ -150,7 +140,7 @@ const UserManagementPage = () => {
       {/* Button to add a new user */}
       <button
         onClick={() => {
-          if (familyNameOptions.length > 0 && partOfFamilyOptions.length > 0) {
+          if (familyNameOptions.length > 0 && parentFamilyOptions.length > 0) {
             setIsFormVisible((prev) => !prev);
           } else {
             alert('Add a Family First');
@@ -167,7 +157,7 @@ const UserManagementPage = () => {
           onSave={handleAddUser}
           onCancel={() => setIsFormVisible(false)}
           familyNameOptions={familyNameOptions}
-          partOfFamilyOptions={partOfFamilyOptions}
+          parentFamilyOptions={parentFamilyOptions}
           pendingChanges={pendingChanges}
         />
       )}
@@ -178,9 +168,9 @@ const UserManagementPage = () => {
         onEdit={handleEditUser}
         onDelete={handleDeleteUser}
         familyNameOptions={familyNameOptions}
-        partOfFamilyOptions={partOfFamilyOptions}
+        parentFamilyOptions={parentFamilyOptions}
         pendingChanges={pendingChanges}
-        familiesNameToId={familiesNameToId}
+        familiesMap={familiesMap}
       />
     </div>
   );

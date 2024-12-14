@@ -4,14 +4,14 @@ const UserForm = ({
   onSave,
   onCancel,
   familyNameOptions,
-  partOfFamilyOptions,
+  parentFamilyOptions,
   pendingChanges,
 }) => {
   const [userData, setUserData] = useState({
     name: '',
     memberAs: '',
-    familyName: familyNameOptions.length > 0 ? familyNameOptions[0].value : null,
-    partOfFamily: partOfFamilyOptions.length > 0 ? partOfFamilyOptions[0].value : null,
+    familyId: familyNameOptions.length > 0 ? familyNameOptions[0].value : null,
+    parentFamily: parentFamilyOptions.length > 0 ? parentFamilyOptions[0].value : null,
     imageFile: null,
   });
 
@@ -96,7 +96,7 @@ const UserForm = ({
             Family Name
           </label>
           <select
-            name='familyName'
+            name='familyId'
             defaultValue={familyNameOptions[0].value}
             onChange={handleInputChange}
             className='w-full p-1 border border-gray-300 rounded'
@@ -116,15 +116,15 @@ const UserForm = ({
             Parent Family
           </label>
           <select
-            name='partOfFamily'
-            defaultValue={partOfFamilyOptions[0].value}
+            name='parentFamily'
+            defaultValue={parentFamilyOptions[0].value}
             onChange={handleInputChange}
             className='w-full p-1 border border-gray-300 rounded'
             readOnly={pendingChanges}
           >
-            {partOfFamilyOptions.map((partOfFamily) => (
-              <option key={partOfFamily.value} value={partOfFamily.value}>
-                {partOfFamily.label}
+            {parentFamilyOptions.map((parentFamily) => (
+              <option key={parentFamily.value} value={parentFamily.value}>
+                {parentFamily.label}
               </option>
             ))}
           </select>
