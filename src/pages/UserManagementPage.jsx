@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import UserForm from '../components/UserManagement/UserForm';
+import UserList from '../components/UserManagement/UserList';
 
 import { axiosClient } from '../axios-client';
 
