@@ -37,6 +37,7 @@ const UserManagementPage = () => {
 
   const {
     data: rawFamilyMembers,
+    setData: setRawFamilyMembers,
     loading: familyMembersLoading,
     refetch,
     refetching,
@@ -128,7 +129,7 @@ const UserManagementPage = () => {
         error: 'Error Deleting Family Member',
       })
       .then(() => {
-        refetch();
+        setRawFamilyMembers((prevData) => prevData.filter((user) => user.id !== userId));
       })
       .finally(() => {
         setPendingChanges(false);

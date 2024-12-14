@@ -13,6 +13,7 @@ const FamilyManagementPage = () => {
 
   const {
     data: users,
+    setData: setUsers,
     refetch,
     refetching,
     loading,
@@ -86,7 +87,7 @@ const FamilyManagementPage = () => {
         error: 'Error Deleting Family',
       })
       .then(() => {
-        refetch();
+        setUsers((prevData) => prevData.filter((user) => user.id !== userId));
       })
       .finally(() => {
         setPendingChanges(false);
