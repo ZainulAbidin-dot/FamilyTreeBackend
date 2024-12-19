@@ -53,6 +53,7 @@ const UserList = ({ users, onEdit, onDelete, refetching, pendingChanges }) => {
                 <th className='p-2 border border-gray-300 text-left'>ID</th>
                 <th className='p-2 border border-gray-300 text-left'>Family Head Name</th>
                 <th className='p-2 border border-gray-300 text-left'>Family Name</th>
+                <th className='p-2 border border-gray-300 text-left'>Member Count</th>
                 <th className='p-2 border border-gray-300 text-left'>Order</th>
                 <th className='p-2 border border-gray-300 text-left'>Actions</th>
               </tr>
@@ -88,6 +89,15 @@ const UserList = ({ users, onEdit, onDelete, refetching, pendingChanges }) => {
                       </td>
                       <td className='p-2 border border-gray-300'>
                         <input
+                          type='text'
+                          value={editedUser.memberCount}
+                          className='w-full p-1 border border-gray-300 rounded'
+                          readOnly
+                          disabled
+                        />
+                      </td>
+                      <td className='p-2 border border-gray-300'>
+                        <input
                           type='number'
                           name='order'
                           value={editedUser.order}
@@ -119,6 +129,7 @@ const UserList = ({ users, onEdit, onDelete, refetching, pendingChanges }) => {
                         {user.familyHeadName}
                       </td>
                       <td className='p-2 border border-gray-300'>{user.familyName}</td>
+                      <td className='p-2 border border-gray-300'>{user.memberCount}</td>
                       <td className='p-2 border border-gray-300'>{user.order}</td>
                       <td className='p-2 border border-gray-300'>
                         <button

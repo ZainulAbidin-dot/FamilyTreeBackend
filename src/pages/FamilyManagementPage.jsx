@@ -26,6 +26,7 @@ const FamilyManagementPage = () => {
           familyHeadName: user.family_head_name,
           familyName: user.family_name,
           order: user.order,
+          memberCount: user.member_count,
         };
       });
     },
