@@ -4,7 +4,7 @@ import imageCompression from 'browser-image-compression';
 import { BACKEND_URL } from '../../axios-client';
 
 const UserList = ({
-  users,
+  familyMembers,
   onEdit,
   onDelete,
   familyNameOptions,
@@ -12,9 +12,11 @@ const UserList = ({
   refetching,
   pendingChanges,
   familiesMap,
+  families,
 }) => {
   const [editingUserId, setEditingUserId] = useState(null);
   const [editedUser, setEditedUser] = useState(null);
+  const [selectedFamily, setSelectedFamily] = useState('all');
 
   const handleEditClick = (user) => {
     setEditingUserId(user.id); // Set the current user to edit
@@ -80,6 +82,11 @@ const UserList = ({
     { value: 'Matriarch_Mother', label: 'Matriarch Mother' },
   ];
 
+  const filteredUsers =
+    selectedFamily === 'all'
+      ? familyMembers
+      : familyMembers.filter((user) => user.familyId === parseInt(selectedFamily));
+
   return (
     <motion.div
       className='p-4 bg-white shadow-md rounded-lg mt-6'
@@ -87,8 +94,25 @@ const UserList = ({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <h2 className='text-2xl font-semibold mb-4'>User List</h2>
-      {users.length === 0 ? (
+      <div className='flex items-center justify-between mb-4 gap-4'>
+        <h2 className='text-2xl font-semibold'>
+          User List (Total: {familyMembers.length})
+        </h2>
+
+        <select
+          className='p-2 border border-gray-300 rounded'
+          value={selectedFamily}
+          onChange={(e) => setSelectedFamily(e.target.value)}
+        >
+          <option value='all'>All</option>
+          {families.map((family) => (
+            <option key={family.id} value={family.id}>
+              {family.familyName}
+            </option>
+          ))}
+        </select>
+      </div>
+      {filteredUsers.length === 0 ? (
         <p className='text-gray-600'>
           No users available. Add some users to see them here
         </p>
@@ -109,13 +133,8 @@ const UserList = ({
               </tr>
             </thead>
             <tbody>
-              {users.map((user, index) => (
-                <motion.tr
-                  key={user.id}
-                  className='hover:bg-gray-50'
-                  initial={{ opacity: 0, x: -50 }}
-                  animate={{ opacity: 1, x: 0 }}
-                >
+              {filteredUsers.map((user, index) => (
+                <tr key={user.id} className='hover:bg-gray-50'>
                   {editingUserId === user.id ? (
                     <>
                       <td className='p-2 border border-gray-300'>{user.id}</td>
@@ -218,7 +237,7 @@ const UserList = ({
                     </>
                   ) : (
                     <>
-                      <td className='p-2 border border-gray-300'>{index + 1}</td>
+                      <td className='p-2 border border-gray-300'>{user.id}</td>
                       {/* Image display */}
                       <td className='p-2 border border-gray-300'>
                         {user.imageFile ? (
@@ -264,7 +283,7 @@ const UserList = ({
                       </td>
                     </>
                   )}
-                </motion.tr>
+                </tr>
               ))}
             </tbody>
           </table>

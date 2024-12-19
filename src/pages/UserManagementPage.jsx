@@ -39,7 +39,7 @@ const UserManagementPage = () => {
     refetching,
   } = useAxiosQuery('/family-members', {
     transformData: (data) => {
-      return data.map((user) => {
+      const members = data.map((user) => {
         return {
           id: user.id,
           name: user.name,
@@ -49,6 +49,8 @@ const UserManagementPage = () => {
           imageFile: user.member_image,
         };
       });
+
+      return members;
     },
   });
 
@@ -165,13 +167,14 @@ const UserManagementPage = () => {
 
       <UserList
         refetching={refetching}
-        users={familyMembers}
+        familyMembers={familyMembers}
         onEdit={handleEditUser}
         onDelete={handleDeleteUser}
         familyNameOptions={familyNameOptions}
         parentFamilyOptions={parentFamilyOptions}
         pendingChanges={pendingChanges}
         familiesMap={familiesMap}
+        families={familiesData.users}
       />
     </Container>
   );
