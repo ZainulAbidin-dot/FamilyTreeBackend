@@ -10,7 +10,7 @@ const Header = () => {
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
-      <div className='container mx-auto h-24 flex justify-between items-center py-4 px-6'>
+      <div className='max-w-5xl mx-auto h-24 flex justify-between items-center py-4 px-6 relative'>
         {/* Logo */}
         <Link to='/' className='text-2xl font-bold text-gray-800 hover:text-gray-600'>
           Family Tree Admin Panel
@@ -28,13 +28,19 @@ const Header = () => {
             to='/family-management'
             className='text-gray-600 hover:text-gray-900 transition duration-300'
           >
-            Family Management
+            Families
           </Link>
           <Link
             to='/user-management'
             className='text-gray-600 hover:text-gray-900 transition duration-300'
           >
-            User Management
+            Users
+          </Link>
+          <Link
+            to='/song-management'
+            className='text-gray-600 hover:text-gray-900 transition duration-300'
+          >
+            Songs
           </Link>
         </nav>
 

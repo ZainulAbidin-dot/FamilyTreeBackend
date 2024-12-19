@@ -5,6 +5,7 @@ import { axiosClient } from '../axios-client';
 import { useAxiosQuery } from '../hooks/useAxiosQuery';
 import { Loader } from '../components/loader/Loader';
 import { toast } from 'react-hot-toast';
+import { Container } from '../components/common/Container';
 
 const FamilyManagementPage = () => {
   const [selectedUser, setSelectedUser] = useState(null);
@@ -104,7 +105,7 @@ const FamilyManagementPage = () => {
   }
 
   return (
-    <div className='container mx-auto p-6'>
+    <Container>
       <h1 className='text-3xl font-bold mb-4'>Family Management</h1>
 
       <button
@@ -133,7 +134,7 @@ const FamilyManagementPage = () => {
         refetching={refetching}
         pendingChanges={pendingChanges}
       />
-    </div>
+    </Container>
   );
 };
 

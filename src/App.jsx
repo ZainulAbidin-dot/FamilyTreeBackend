@@ -4,6 +4,7 @@ import Header from './components/Header/Header';
 import Dashboard from './pages/Dashboard';
 import UserManagementPage from './pages/UserManagementPage';
 import FamilyManagementPage from './pages/FamilyManagementPage';
+import SongManagementPage from './pages/SongManagementPage';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
             <Route path='/' element={<Dashboard />} />
             <Route path='/user-management' element={<UserManagementPage />} />
             <Route path='/family-management' element={<FamilyManagementPage />} />
+            <Route path='/song-management' element={<SongManagementPage />} />
           </Routes>
         </main>
       </div>

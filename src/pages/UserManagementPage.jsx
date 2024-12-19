@@ -5,6 +5,7 @@ import { useAxiosQuery } from '../hooks/useAxiosQuery';
 import { axiosClient } from '../axios-client';
 import { Loader } from '../components/loader/Loader';
 import { toast } from 'react-hot-toast';
+import { Container } from '../components/common/Container';
 
 const UserManagementPage = () => {
   const [isFormVisible, setIsFormVisible] = useState(false);
@@ -134,7 +135,7 @@ const UserManagementPage = () => {
   const parentFamilyOptions = [{ label: 'None', value: 'None' }, ...familyNameOptions];
 
   return (
-    <div className='container mx-auto p-6'>
+    <Container>
       <h1 className='text-3xl font-bold mb-4'>Member Management</h1>
 
       {/* Button to add a new user */}
@@ -172,7 +173,7 @@ const UserManagementPage = () => {
         pendingChanges={pendingChanges}
         familiesMap={familiesMap}
       />
-    </div>
+    </Container>
   );
 };
 

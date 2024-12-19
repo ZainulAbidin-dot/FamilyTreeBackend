@@ -17,7 +17,6 @@ const UserList = ({
   const [editedUser, setEditedUser] = useState(null);
 
   const handleEditClick = (user) => {
-    console.log('Edit Clicked');
     setEditingUserId(user.id); // Set the current user to edit
     setEditedUser({ ...user }); // Initialize edited user data
   };
@@ -57,7 +56,6 @@ const UserList = ({
   };
 
   const handleSave = () => {
-    console.log(editedUser);
     if (editedUser) {
       onEdit(editedUser); // Pass the updated user to the parent component
 
