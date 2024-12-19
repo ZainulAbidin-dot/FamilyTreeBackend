@@ -1,71 +1,88 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { FaUser, FaMusic, FaHome, FaBars } from 'react-icons/fa';
+import { FaUserGroup, FaXmark } from 'react-icons/fa6';
 
 const Header = () => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
+
+  const menuItems = [
+    { href: '/', label: 'Home', icon: FaHome },
+    { href: '/family-management', label: 'Families', icon: FaUserGroup },
+    { href: '/user-management', label: 'Users', icon: FaUser },
+    { href: '/song-management', label: 'Songs', icon: FaMusic },
+  ];
+
+  React.useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
   return (
-    <motion.header
-      className='bg-white shadow-md w-full'
-      initial={{ y: -50, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.5 }}
-    >
-      <div className='max-w-5xl mx-auto h-24 flex justify-between items-center py-4 px-6 relative'>
-        {/* Logo */}
-        <Link to='/' className='text-2xl font-bold text-gray-800 hover:text-gray-600'>
-          Family Tree Admin Panel
+    <div className='bg-white shadow-md'>
+      <div className='max-w-7xl w-full mx-auto h-24 flex justify-between items-center py-4 px-6 relative'>
+        <Link to='/' className='text-xl font-bold text-gray-800 hover:text-gray-600'>
+          Family Tree Admin
         </Link>
 
         {/* Navigation Links */}
-        <nav className='hidden md:flex space-x-6 text-[18px]'>
-          <Link
-            to='/'
-            className='text-gray-600 hover:text-gray-900 transition duration-300'
-          >
-            Dashboard
-          </Link>
-          <Link
-            to='/family-management'
-            className='text-gray-600 hover:text-gray-900 transition duration-300'
-          >
-            Families
-          </Link>
-          <Link
-            to='/user-management'
-            className='text-gray-600 hover:text-gray-900 transition duration-300'
-          >
-            Users
-          </Link>
-          <Link
-            to='/song-management'
-            className='text-gray-600 hover:text-gray-900 transition duration-300'
-          >
-            Songs
-          </Link>
+        <nav className='hidden md:flex space-x-6 text-lg'>
+          {menuItems.map((item, index) => (
+            <NavItem key={index} {...item} />
+          ))}
         </nav>
 
-        {/* Mobile Menu Button */}
-        <div className='md:hidden'>
-          <button className='text-gray-600 focus:outline-none focus:text-gray-900'>
-            <svg
-              className='w-6 h-6'
-              fill='none'
-              stroke='currentColor'
-              viewBox='0 0 24 24'
-              xmlns='http://www.w3.org/2000/svg'
-            >
-              <path
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                strokeWidth='2'
-                d='M4 6h16M4 12h16M4 18h16'
-              ></path>
-            </svg>
+        {/* Mobile Navigation */}
+        <div className='md:hidden flex items-center'>
+          <button className='text-gray-800' onClick={() => setIsMobileMenuOpen(true)}>
+            <FaBars className='w-6 h-6' />
           </button>
         </div>
+
+        {/* Mobile Navigation Menu */}
+        {isMobileMenuOpen && (
+          <div className='absolute top-0 right-0 w-80 h-screen bg-white shadow-md z-10 px-6 py-8'>
+            <div className='flex flex-col h-full gap-6'>
+              <div className='flex items-center'>
+                <button
+                  className='text-gray-800 hover:text-gray-600 ml-auto'
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <FaXmark className='w-6 h-6' />
+                </button>
+              </div>
+              <nav className='flex flex-col gap-4 justify-between w-full text-lg'>
+                {menuItems.map((item, index) => (
+                  <NavItem key={index} {...item} />
+                ))}
+              </nav>
+            </div>
+          </div>
+        )}
       </div>
-    </motion.header>
+    </div>
   );
 };
+
+function NavItem({ href, label, icon: Icon }) {
+  return (
+    <Link
+      to={href}
+      className='text-gray-600 hover:text-gray-900 transition duration-300 flex items-center gap-2'
+    >
+      <Icon className='w-4 h-4' />
+      {label}
+    </Link>
+  );
+}
 
 export default Header;
