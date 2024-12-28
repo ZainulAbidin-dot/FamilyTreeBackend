@@ -13,6 +13,7 @@ const UserForm = ({
     familyId: familyNameOptions.length > 0 ? familyNameOptions[0].value : null,
     parentFamily: parentFamilyOptions.length > 0 ? parentFamilyOptions[0].value : null,
     imageFile: null,
+    order: 1,
   });
 
   const handleInputChange = (e) => {
@@ -128,6 +129,23 @@ const UserForm = ({
               </option>
             ))}
           </select>
+        </div>
+
+        {/* Order Field */}
+        <div className='mb-4'>
+          <label htmlFor='order' className='block text-sm font-medium text-gray-700'>
+            Order
+          </label>
+          <input
+            type='number'
+            id='order'
+            name='order'
+            min={0}
+            value={userData.order}
+            onChange={handleInputChange}
+            className='mt-1 p-2 w-full border border-gray-300 rounded'
+            readOnly={pendingChanges}
+          />
         </div>
 
         {/* Image Upload Field */}

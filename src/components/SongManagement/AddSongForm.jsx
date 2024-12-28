@@ -22,9 +22,9 @@ export const AddSongForm = ({ onSave, onCancel, pendingChanges }) => {
         return;
       }
 
-      const MAX_FILE_SIZE = 4 * 1024 * 1024; // 2MB
+      const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
       if (file.size > MAX_FILE_SIZE) {
-        toast.error('File size must be less than 2MB');
+        toast.error('File size must be less than 10MB');
         return;
       }
 

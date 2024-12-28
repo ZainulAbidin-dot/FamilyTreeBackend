@@ -93,11 +93,11 @@ function SongForm({ song, onSave, onCancel, pendingChanges }) {
   function handleFileChange(e) {
     const file = e.target?.files?.[0];
 
-    // check if it is a valid audio file. it must be less than 2MB
+    // check if it is a valid audio file. it must be less than 10MB
     if (file && file instanceof File) {
-      const MAX_FILE_SIZE = 4 * 1024 * 1024; // 4MB
+      const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
       if (file.size > MAX_FILE_SIZE) {
-        toast.error('File size must be less than 2MB');
+        toast.error('File size must be less than 10MB');
         return;
       }
 

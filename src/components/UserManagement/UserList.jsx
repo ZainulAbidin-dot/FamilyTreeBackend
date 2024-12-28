@@ -17,6 +17,7 @@ const UserList = ({
   const [editingUserId, setEditingUserId] = useState(null);
   const [editedUser, setEditedUser] = useState(null);
   const [selectedFamily, setSelectedFamily] = useState('all');
+  const [sortOrderOfOrder, setSortOrderOfOrder] = useState('none');
 
   const handleEditClick = (user) => {
     setEditingUserId(user.id); // Set the current user to edit
@@ -129,6 +130,7 @@ const UserList = ({
                 <th className='p-2 border border-gray-300 text-left'>Member As</th>
                 <th className='p-2 border border-gray-300 text-left'>Family Name</th>
                 <th className='p-2 border border-gray-300 text-left'>Parent Family</th>
+                <th className='p-2 border border-gray-300 text-left'>Order</th>
                 <th className='p-2 border border-gray-300 text-left'>Actions</th>
               </tr>
             </thead>
@@ -219,6 +221,21 @@ const UserList = ({
                         </select>
                       </td>
                       <td className='p-2 border border-gray-300'>
+                        <input
+                          type='number'
+                          name='order'
+                          min={0}
+                          value={editedUser.order}
+                          onChange={handleInputChange}
+                          className='w-full p-1 border border-gray-300 rounded'
+                          readOnly={
+                            editedUser.memberAs === 'Patriarch' ||
+                            editedUser.memberAs === 'Matriarch' ||
+                            pendingChanges
+                          }
+                        />
+                      </td>
+                      <td className='p-2 border border-gray-300'>
                         <button
                           onClick={handleSave}
                           className='mr-2 text-green-600 hover:underline disabled:opacity-50 disabled:cursor-not-allowed'
@@ -265,6 +282,7 @@ const UserList = ({
                           ? 'None'
                           : familiesMap.get(user.parentFamily)}
                       </td>
+                      <td className='p-2 border border-gray-300'>{user.order}</td>
                       <td className='p-2 border border-gray-300'>
                         <button
                           onClick={() => handleEditClick(user)}

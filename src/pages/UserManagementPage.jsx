@@ -39,14 +39,15 @@ const UserManagementPage = () => {
     refetching,
   } = useAxiosQuery('/family-members', {
     transformData: (data) => {
-      const members = data.map((user) => {
+      const members = data.map((member) => {
         return {
-          id: user.id,
-          name: user.name,
-          memberAs: user.member_as,
-          familyId: user.family_id,
-          parentFamily: user.sub_family_of,
-          imageFile: user.member_image,
+          id: member.id,
+          name: member.name,
+          memberAs: member.member_as,
+          familyId: member.family_id,
+          parentFamily: member.sub_family_of,
+          imageFile: member.member_image,
+          order: member.order,
         };
       });
 
@@ -69,6 +70,7 @@ const UserManagementPage = () => {
       family_id: userData.familyId,
       sub_family_of: userData.parentFamily === 'None' ? null : userData.parentFamily,
       member_image: userData.imageFile,
+      order: userData.order,
     });
 
     toast
@@ -95,6 +97,7 @@ const UserManagementPage = () => {
       sub_family_of:
         updatedUser.parentFamily === 'None' ? null : parseInt(updatedUser.parentFamily),
       member_image: updatedUser.imageFile,
+      order: parseInt(updatedUser.order),
     });
 
     toast
