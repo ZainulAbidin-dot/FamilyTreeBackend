@@ -243,6 +243,12 @@ function SongForm({ song, onSave, onCancel, pendingChanges }) {
 }
 
 function SongDisplayRow({ song, pendingChanges, handleEditClick, onDelete }) {
+  const handleDeleteClick = () => {
+    if (confirm('Are you sure you want to delete this song?')) {
+      onDelete(song.id);
+    }
+  };
+
   return (
     <React.Fragment>
       <td className='p-2 border border-gray-300'>{song.id}</td>
@@ -273,7 +279,7 @@ function SongDisplayRow({ song, pendingChanges, handleEditClick, onDelete }) {
             Edit
           </button>
           <button
-            onClick={() => onDelete(song.id)}
+            onClick={handleDeleteClick}
             className='text-red-600 hover:underline disabled:opacity-50 disabled:cursor-not-allowed'
             disabled={pendingChanges}
           >

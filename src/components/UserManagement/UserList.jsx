@@ -72,6 +72,13 @@ const UserList = ({
     setEditedUser(null); // Clear the form state
   };
 
+  function handleDelete(userId) {
+    const confirm = window.confirm('Are you sure you want to delete this user?');
+    if (confirm) {
+      onDelete(userId);
+    }
+  }
+
   const memberAsOptions = [
     { value: 'Son', label: 'Son' },
     { value: 'Daughter', label: 'Daughter' },
@@ -292,7 +299,7 @@ const UserList = ({
                           Edit
                         </button>
                         <button
-                          onClick={() => onDelete(user.id)}
+                          onClick={() => handleDelete(user.id)}
                           className='text-red-600 hover:underline disabled:opacity-50 disabled:cursor-not-allowed'
                           disabled={pendingChanges}
                         >
