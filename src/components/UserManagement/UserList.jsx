@@ -94,6 +94,15 @@ const UserList = ({
     selectedFamily === 'all'
       ? familyMembers
       : familyMembers.filter((user) => user.familyId === parseInt(selectedFamily));
+    
+  const parents = [
+    'patriarch',
+    'matriarch',
+    'patriarch_father',
+    'patriarch_mother',
+    'matriarch_father',
+    'matriarch_mother'
+  ]
 
   return (
     <motion.div
@@ -235,11 +244,7 @@ const UserList = ({
                           value={editedUser.order}
                           onChange={handleInputChange}
                           className='w-full p-1 border border-gray-300 rounded'
-                          readOnly={
-                            editedUser.memberAs === 'Patriarch' ||
-                            editedUser.memberAs === 'Matriarch' ||
-                            pendingChanges
-                          }
+                          readOnly={parents.includes(editedUser.memberAs.toLowerCase()) || pendingChanges}
                         />
                       </td>
                       <td className='p-2 border border-gray-300'>

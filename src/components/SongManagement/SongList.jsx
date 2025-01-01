@@ -186,23 +186,23 @@ function SongForm({ song, onSave, onCancel, pendingChanges }) {
 
       <td className='p-2 border border-gray-300'>
         <div className='flex items-center justify-center gap-2'>
-          <div class='inline-flex items-center'>
+          <div className='inline-flex items-center'>
             <label
-              class='flex items-center cursor-pointer relative'
-              for={fieldId('selected')}
+              className='flex items-center cursor-pointer relative'
+              htmlFor={fieldId('selected')}
             >
               <input
                 type='checkbox'
-                class='peer size-6 cursor-pointer transition-all appearance-none rounded shadow hover:shadow-md border border-slate-300 checked:bg-slate-800 checked:border-slate-800'
+                className='peer size-6 cursor-pointer transition-all appearance-none rounded shadow hover:shadow-md border border-slate-300 checked:bg-slate-800 checked:border-slate-800'
                 id={fieldId('selected')}
                 name='selected'
                 onChange={handleCheckChange}
                 checked={songData.selected}
               />
-              <span class='absolute text-white opacity-0 peer-checked:opacity-100 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none'>
+              <span className='absolute text-white opacity-0 peer-checked:opacity-100 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none'>
                 <svg
                   xmlns='http://www.w3.org/2000/svg'
-                  class='h-3.5 w-3.5'
+                  className='h-3.5 w-3.5'
                   viewBox='0 0 20 20'
                   fill='currentColor'
                   stroke='currentColor'
