@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import imageCompression from 'browser-image-compression';
 import { BACKEND_URL } from '../../axios-client';
+import { ImagePicker } from '../ImagePicker/image-picker';
 
 const UserList = ({
   familyMembers,
@@ -17,7 +17,6 @@ const UserList = ({
   const [editingUserId, setEditingUserId] = useState(null);
   const [editedUser, setEditedUser] = useState(null);
   const [selectedFamily, setSelectedFamily] = useState('all');
-  const [sortOrderOfOrder, setSortOrderOfOrder] = useState('none');
 
   const handleEditClick = (user) => {
     setEditingUserId(user.id); // Set the current user to edit
@@ -30,32 +29,6 @@ const UserList = ({
       ...prev,
       [name]: value,
     }));
-  };
-
-  // Handle image change
-  const handleImageChange = async (e) => {
-    const file = e.target.files[0];
-    const options = {
-      maxSizeMB: 1, // 1 MB
-      maxWidthOrHeight: 1024, // Resizing the image
-      useWebWorker: true,
-    };
-    if (file) {
-      try {
-        const compressedFile = await imageCompression(file, options);
-
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          setEditedUser((prevData) => ({
-            ...prevData,
-            imageFile: reader.result, // Save the base64 string of the image
-          }));
-        };
-        reader.readAsDataURL(compressedFile); // Convert image to base64 string
-      } catch (error) {
-        console.error('Error compressing the image:', error);
-      }
-    }
   };
 
   const handleSave = () => {
@@ -94,15 +67,15 @@ const UserList = ({
     selectedFamily === 'all'
       ? familyMembers
       : familyMembers.filter((user) => user.familyId === parseInt(selectedFamily));
-    
+
   const parents = [
     'patriarch',
     'matriarch',
     'patriarch_father',
     'patriarch_mother',
     'matriarch_father',
-    'matriarch_mother'
-  ]
+    'matriarch_mother',
+  ];
 
   return (
     <motion.div
@@ -158,24 +131,28 @@ const UserList = ({
                       <td className='p-2 border border-gray-300'>{user.id}</td>
                       {/* Image upload field */}
                       <td className='p-2 border border-gray-300'>
-                        <input
-                          type='file'
-                          accept='image/*'
-                          onChange={handleImageChange}
-                          className='w-full p-1 border border-gray-300 rounded'
-                          readOnly={pendingChanges}
+                        <ImagePicker
+                          imgSrc={
+                            editedUser.imageFile.startsWith('data:image')
+                              ? editedUser.imageFile
+                              : null
+                          }
+                          setImgSrc={(data) => {
+                            console.log(data);
+                            setEditedUser((prevData) => ({
+                              ...prevData,
+                              imageFile: data,
+                            }));
+                          }}
+                          disabled={pendingChanges}
                         />
-                        {editedUser.imageFile && (
+                        {editedUser.imageFile?.startsWith('data:image') === false ? (
                           <img
-                            src={
-                              editedUser.imageFile.startsWith('data:image')
-                                ? editedUser.imageFile
-                                : `${BACKEND_URL}/${editedUser.imageFile}`
-                            }
+                            src={`${BACKEND_URL}/${editedUser.imageFile}`}
                             alt='Preview'
-                            className='w-16 h-16 object-cover mt-2'
+                            className='w-16 h-16 rounded-full object-cover mt-2'
                           />
-                        )}
+                        ) : null}
                       </td>
                       <td className='p-2 border border-gray-300'>
                         <input
@@ -244,7 +221,10 @@ const UserList = ({
                           value={editedUser.order}
                           onChange={handleInputChange}
                           className='w-full p-1 border border-gray-300 rounded'
-                          readOnly={parents.includes(editedUser.memberAs.toLowerCase()) || pendingChanges}
+                          readOnly={
+                            parents.includes(editedUser.memberAs.toLowerCase()) ||
+                            pendingChanges
+                          }
                         />
                       </td>
                       <td className='p-2 border border-gray-300'>

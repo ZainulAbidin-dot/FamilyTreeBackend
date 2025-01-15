@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { ImagePicker } from '../ImagePicker/image-picker';
 
 const UserForm = ({
   onSave,
@@ -22,21 +23,6 @@ const UserForm = ({
       ...prevData,
       [name]: value,
     }));
-  };
-
-  // Handle image upload
-  const handleImageChange = (e) => {
-    const file = e.target.files[0]; // Get the file from the input
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setUserData((prevData) => ({
-          ...prevData,
-          imageFile: reader.result, // Set the image as a base64 string (you can also upload the file to a server if needed)
-        }));
-      };
-      reader.readAsDataURL(file); // Convert the image to base64
-    }
   };
 
   const handleSubmit = (e) => {
@@ -148,32 +134,17 @@ const UserForm = ({
           />
         </div>
 
-        {/* Image Upload Field */}
         <div className='mb-4'>
           <label htmlFor='image' className='block text-sm font-medium text-gray-700'>
             Upload Image
           </label>
-          <input
-            type='file'
+          <ImagePicker
+            imgSrc={userData.imageFile}
+            setImgSrc={(data) => setUserData({ ...userData, imageFile: data })}
             id='image'
-            name='image'
-            onChange={handleImageChange}
-            className='mt-1 p-2 w-full border border-gray-300 rounded'
-            accept='image/*'
-            readOnly={pendingChanges}
+            disabled={pendingChanges}
           />
         </div>
-
-        {/* Image Preview (if image is uploaded) */}
-        {userData.imageFile && (
-          <div className='mb-4'>
-            <img
-              src={userData.imageFile}
-              alt='Uploaded'
-              className='w-32 h-32 object-cover border border-gray-300 rounded'
-            />
-          </div>
-        )}
 
         {/* Submit and Cancel Buttons */}
         <div className='flex justify-end space-x-4'>
