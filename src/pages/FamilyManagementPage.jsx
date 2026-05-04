@@ -18,25 +18,13 @@ const FamilyManagementPage = () => {
     refetch,
     refetching,
     loading,
-  } = useAxiosQuery('/families', {
-    transformData: (data) => {
-      return data.map((user) => {
-        return {
-          id: user.id,
-          familyHeadName: user.family_head_name,
-          familyName: user.family_name,
-          order: user.order,
-          memberCount: user.member_count,
-        };
-      });
-    },
-  });
+  } = useAxiosQuery('/families');
 
   const handleAddUser = async (userData) => {
     setPendingChanges(true);
     const promise = axiosClient.post('/families', {
-      family_head_name: userData.familyHeadName,
-      family_name: userData.familyName,
+      familyHeadName: userData.familyHeadName,
+      familyName: userData.familyName,
       order: userData.order,
     });
 
@@ -60,8 +48,8 @@ const FamilyManagementPage = () => {
     setPendingChanges(true);
 
     const promise = axiosClient.put(`/families/${updatedUser.id}`, {
-      family_head_name: updatedUser.familyHeadName,
-      family_name: updatedUser.familyName,
+      familyHeadName: updatedUser.familyHeadName,
+      familyName: updatedUser.familyName,
       order: parseInt(updatedUser.order),
     });
 

@@ -17,19 +17,7 @@ const SongManagementPage = () => {
     refetch,
     refetching,
     loading,
-  } = useAxiosQuery('/songs', {
-    transformData: (data) => {
-      return data.map((song) => {
-        return {
-          id: song.id,
-          fileName: song.file_name,
-          fileType: song.file_type,
-          url: song.url,
-          selected: song.selected,
-        };
-      });
-    },
-  });
+  } = useAxiosQuery('/songs');
 
   const handleAddSong = async (songData) => {
     setPendingChanges(true);
