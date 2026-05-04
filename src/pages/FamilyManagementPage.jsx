@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import UserForm from '../components/FamilyManagement/UserForm';
 import UserList from '../components/FamilyManagement/UserList';
 import { axiosClient } from '../axios-client';
@@ -12,13 +12,7 @@ const FamilyManagementPage = () => {
   const [isFormVisible, setIsFormVisible] = useState(false); // Track the visibility of the form
   const [pendingChanges, setPendingChanges] = useState(false);
 
-  const {
-    data: users,
-    setData: setUsers,
-    refetch,
-    refetching,
-    loading,
-  } = useAxiosQuery('/families');
+  const { data: users, setData: setUsers, refetch, refetching, loading } = useAxiosQuery('/families');
 
   const handleAddUser = async (userData) => {
     setPendingChanges(true);

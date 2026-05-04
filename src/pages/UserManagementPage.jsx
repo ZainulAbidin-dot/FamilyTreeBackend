@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import UserForm from '../components/UserManagement/UserForm';
 import UserList from '../components/UserManagement/UserList';
 import { useAxiosQuery } from '../hooks/useAxiosQuery';
@@ -16,14 +16,14 @@ const UserManagementPage = () => {
       const users = data.map((user) => {
         return {
           id: user.id,
-          familyHeadName: user.family_head_name,
-          familyName: user.family_name,
+          familyHeadName: user.familyHeadName,
+          familyName: user.familyName,
           order: user.order,
         };
       });
 
       const familiesMap = data.reduce((acc, family) => {
-        acc.set(family.id, family.family_name);
+        acc.set(family.id, family.familyName);
         return acc;
       }, new Map());
 
@@ -43,10 +43,10 @@ const UserManagementPage = () => {
         return {
           id: member.id,
           name: member.name,
-          memberAs: member.member_as,
-          familyId: member.family_id,
-          parentFamily: member.sub_family_of,
-          imageFile: member.member_image,
+          memberAs: member.memberAs,
+          familyId: member.familyId,
+          parentFamily: member.subFamilyOf,
+          imageFile: member.memberImage,
           order: member.order,
         };
       });
@@ -66,10 +66,10 @@ const UserManagementPage = () => {
     setPendingChanges(true);
     const promise = axiosClient.post('/family-members', {
       name: userData.name,
-      member_as: userData.memberAs,
-      family_id: userData.familyId,
-      sub_family_of: userData.parentFamily === 'None' ? null : userData.parentFamily,
-      member_image: userData.imageFile,
+      memberAs: userData.memberAs,
+      familyId: userData.familyId,
+      subFamilyOf: userData.parentFamily === 'None' ? null : userData.parentFamily,
+      memberImage: userData.imageFile,
       order: userData.order,
     });
 
@@ -81,10 +81,10 @@ const UserManagementPage = () => {
       })
       .then(() => {
         refetch();
+        setIsFormVisible(false);
       })
       .finally(() => {
         setPendingChanges(false);
-        setIsFormVisible(false);
       });
   };
 
@@ -92,11 +92,10 @@ const UserManagementPage = () => {
     setPendingChanges(true);
     const promise = axiosClient.put(`/family-members/${updatedUser.id}`, {
       name: updatedUser.name,
-      member_as: updatedUser.memberAs,
-      family_id: parseInt(updatedUser.familyId),
-      sub_family_of:
-        updatedUser.parentFamily === 'None' ? null : parseInt(updatedUser.parentFamily),
-      member_image: updatedUser.imageFile,
+      memberAs: updatedUser.memberAs,
+      familyId: parseInt(updatedUser.familyId),
+      subFamilyOf: updatedUser.parentFamily === 'None' ? null : parseInt(updatedUser.parentFamily),
+      memberImage: updatedUser.imageFile,
       order: parseInt(updatedUser.order),
     });
 
@@ -108,8 +107,6 @@ const UserManagementPage = () => {
       })
       .then(() => {
         refetch();
-      })
-      .finally(() => {
         setPendingChanges(false);
       });
   };

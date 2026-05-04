@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { BACKEND_URL } from '../../axios-client';
 import { ImagePicker } from '../ImagePicker/image-picker';
@@ -85,9 +85,7 @@ const UserList = ({
       transition={{ duration: 0.5 }}
     >
       <div className='flex items-center justify-between mb-4 gap-4'>
-        <h2 className='text-2xl font-semibold'>
-          User List (Total: {familyMembers.length})
-        </h2>
+        <h2 className='text-2xl font-semibold'>User List (Total: {familyMembers.length})</h2>
 
         <select
           className='p-2 border border-gray-300 rounded'
@@ -103,14 +101,10 @@ const UserList = ({
         </select>
       </div>
       {filteredUsers.length === 0 ? (
-        <p className='text-gray-600'>
-          No users available. Add some users to see them here
-        </p>
+        <p className='text-gray-600'>No users available. Add some users to see them here</p>
       ) : (
         <div className='overflow-x-auto'>
-          <table
-            className={`w-full border-collapse ${refetching ? 'animate-pulse' : ''}`}
-          >
+          <table className={`w-full border-collapse ${refetching ? 'animate-pulse' : ''}`}>
             <thead>
               <tr className='bg-gray-100'>
                 <th className='p-2 border border-gray-300 text-left'>ID</th>
@@ -132,11 +126,7 @@ const UserList = ({
                       {/* Image upload field */}
                       <td className='p-2 border border-gray-300'>
                         <ImagePicker
-                          imgSrc={
-                            editedUser.imageFile.startsWith('data:image')
-                              ? editedUser.imageFile
-                              : null
-                          }
+                          imgSrc={editedUser.imageFile.startsWith('data:image') ? editedUser.imageFile : null}
                           setImgSrc={(data) => {
                             console.log(data);
                             setEditedUser((prevData) => ({
@@ -197,11 +187,7 @@ const UserList = ({
                       <td className='p-2 border border-gray-300'>
                         <select
                           name='parentFamily'
-                          value={
-                            editedUser.parentFamily === null
-                              ? 'None'
-                              : editedUser.parentFamily
-                          }
+                          value={editedUser.parentFamily === null ? 'None' : editedUser.parentFamily}
                           onChange={handleInputChange}
                           className='w-full p-1 border border-gray-300 rounded'
                           readOnly={pendingChanges}
@@ -221,10 +207,7 @@ const UserList = ({
                           value={editedUser.order}
                           onChange={handleInputChange}
                           className='w-full p-1 border border-gray-300 rounded'
-                          readOnly={
-                            parents.includes(editedUser.memberAs.toLowerCase()) ||
-                            pendingChanges
-                          }
+                          readOnly={parents.includes(editedUser.memberAs.toLowerCase()) || pendingChanges}
                         />
                       </td>
                       <td className='p-2 border border-gray-300'>
@@ -266,13 +249,9 @@ const UserList = ({
                       </td>
                       <td className='p-2 border border-gray-300'>{user.name}</td>
                       <td className='p-2 border border-gray-300'>{user.memberAs}</td>
+                      <td className='p-2 border border-gray-300'>{familiesMap.get(user.familyId)}</td>
                       <td className='p-2 border border-gray-300'>
-                        {familiesMap.get(user.familyId)}
-                      </td>
-                      <td className='p-2 border border-gray-300'>
-                        {user.parentFamily === null
-                          ? 'None'
-                          : familiesMap.get(user.parentFamily)}
+                        {user.parentFamily === null ? 'None' : familiesMap.get(user.parentFamily)}
                       </td>
                       <td className='p-2 border border-gray-300'>{user.order}</td>
                       <td className='p-2 border border-gray-300'>
