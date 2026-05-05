@@ -2,11 +2,7 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 
 export const AddSongForm = ({ onSave, onCancel, pendingChanges }) => {
-  const [formData, setFormData] = useState({
-    fileBase64: '',
-    fileName: '',
-    fileType: '',
-  });
+  const [formData, setFormData] = useState({ fileBase64: '', fileName: '', fileType: '', file: null });
 
   function handleFileChange(e) {
     const file = e.target?.files?.[0];
@@ -35,6 +31,7 @@ export const AddSongForm = ({ onSave, onCancel, pendingChanges }) => {
           fileBase64: e.target.result,
           fileName: file.name,
           fileType: fileType,
+          file: file,
         });
       };
       reader.readAsDataURL(file);
@@ -45,7 +42,12 @@ export const AddSongForm = ({ onSave, onCancel, pendingChanges }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSave(formData); // Save the new/edited user
+
+    const dataToSend = new FormData();
+    dataToSend.append('audioFile', formData.file);
+    onSave(dataToSend);
+
+    // onSave(formData); // Save the new/edited user
   };
 
   return (
@@ -70,9 +72,7 @@ export const AddSongForm = ({ onSave, onCancel, pendingChanges }) => {
 
         {formData.fileBase64 && (
           <div className='mb-4'>
-            <label className='block text-sm font-medium text-gray-700'>
-              Song Preview
-            </label>
+            <label className='block text-sm font-medium text-gray-700'>Song Preview</label>
             <audio controls className='w-full'>
               <source src={formData.fileBase64} type='audio/mpeg' />
               Your browser does not support the audio element.

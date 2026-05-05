@@ -30,20 +30,14 @@ export const SongList = ({ songs, onEdit, onDelete, refetching, pendingChanges }
     >
       <h2 className='text-2xl font-semibold mb-4'>Songs List</h2>
       {songs.length === 0 ? (
-        <p className='text-gray-600'>
-          No songs available. Add some songs to see them here.
-        </p>
+        <p className='text-gray-600'>No songs available. Add some songs to see them here.</p>
       ) : (
         <div className='overflow-x-auto'>
-          <table
-            className={`w-full border-collapse ${refetching ? 'animate-pulse' : ''}`}
-          >
+          <table className={`w-full border-collapse ${refetching ? 'animate-pulse' : ''}`}>
             <thead>
               <tr className='bg-gray-100'>
                 <th className='p-2 border border-gray-300 text-left'>ID</th>
-                <th className='p-2 border border-gray-300 text-left'>
-                  Original File Name
-                </th>
+                <th className='p-2 border border-gray-300 text-left'>Original File Name</th>
                 <th className='p-2 border border-gray-300 text-left'>Song</th>
                 <th className='p-2 border border-gray-300 text-left'>Selected</th>
                 <th className='p-2 border border-gray-300 text-left'>Actions</th>
@@ -58,12 +52,7 @@ export const SongList = ({ songs, onEdit, onDelete, refetching, pendingChanges }
                   animate={{ opacity: 1, x: 0 }}
                 >
                   {editingId === song.id ? (
-                    <SongForm
-                      song={song}
-                      onSave={handleSave}
-                      onCancel={handleCancel}
-                      pendingChanges={pendingChanges}
-                    />
+                    <SongForm song={song} onSave={handleSave} onCancel={handleCancel} pendingChanges={pendingChanges} />
                   ) : (
                     <SongDisplayRow
                       song={song}
@@ -187,10 +176,7 @@ function SongForm({ song, onSave, onCancel, pendingChanges }) {
       <td className='p-2 border border-gray-300'>
         <div className='flex items-center justify-center gap-2'>
           <div className='inline-flex items-center'>
-            <label
-              className='flex items-center cursor-pointer relative'
-              htmlFor={fieldId('selected')}
-            >
+            <label className='flex items-center cursor-pointer relative' htmlFor={fieldId('selected')}>
               <input
                 type='checkbox'
                 className='peer size-6 cursor-pointer transition-all appearance-none rounded shadow hover:shadow-md border border-slate-300 checked:bg-slate-800 checked:border-slate-800'
@@ -255,17 +241,13 @@ function SongDisplayRow({ song, pendingChanges, handleEditClick, onDelete }) {
       <td className='p-2 border border-gray-300'>{song.fileName}</td>
       <td className='p-2 border border-gray-300 w-1/2'>
         <audio controls className='w-full'>
-          <source src={`${BACKEND_URL}/${song.url}`} type={song.fileType} />
+          <source src={song.url.startsWith('https') ? song.url : `${BACKEND_URL}/${song.url}`} type={song.fileType} />
           Your browser does not support the audio element.
         </audio>
       </td>
       <td className='p-2 border border-gray-300'>
         <div className='flex items-center justify-center'>
-          {song.selected ? (
-            <FaCheck className='text-green-500' />
-          ) : (
-            <FaXmark className='text-red-500' />
-          )}
+          {song.selected ? <FaCheck className='text-green-500' /> : <FaXmark className='text-red-500' />}
           <span className='sr-only'>{song.selected ? 'Selected' : 'Not Selected'}</span>
         </div>
       </td>

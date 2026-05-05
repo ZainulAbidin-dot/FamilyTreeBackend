@@ -5,7 +5,4 @@ export const BACKEND_URL = 'http://localhost:3005';
 
 export const axiosClient = axios.create({
   baseURL: BACKEND_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
 });
