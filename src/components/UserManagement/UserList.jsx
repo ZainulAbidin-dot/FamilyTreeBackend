@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { BACKEND_URL } from '../../axios-client';
 import { ImagePicker } from '../ImagePicker/image-picker';
 
 const UserList = ({
@@ -138,7 +137,7 @@ const UserList = ({
                         />
                         {editedUser.imageFile?.startsWith('data:image') === false ? (
                           <img
-                            src={`${BACKEND_URL}/${editedUser.imageFile}`}
+                            src={editedUser.imageFile}
                             alt='Preview'
                             className='w-16 h-16 rounded-full object-cover mt-2'
                           />
@@ -234,11 +233,7 @@ const UserList = ({
                       <td className='p-2 border border-gray-300'>
                         {user.imageFile ? (
                           <img
-                            src={
-                              user.imageFile.startsWith('data:image')
-                                ? user.imageFile
-                                : `${BACKEND_URL}/${user.imageFile}`
-                            }
+                            src={user.imageFile}
                             alt='User'
                             className='w-16 h-16 object-cover rounded-full'
                             loading='lazy'

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { BACKEND_URL } from '../../axios-client';
 import toast from 'react-hot-toast';
 
 import { FaXmark, FaCheck } from 'react-icons/fa6';
@@ -145,7 +144,7 @@ function SongForm({ song, onSave, onCancel, pendingChanges }) {
           <div className='flex items-center gap-2'>
             <p className='text-sm font-semibold'>Uploaded:</p>
             <audio controls className='w-full'>
-              <source src={`${BACKEND_URL}/${song.url}`} type={song.fileType} />
+              <source src={song.url} type={song.fileType} />
               Your browser does not support the audio element.
             </audio>
           </div>
@@ -241,7 +240,7 @@ function SongDisplayRow({ song, pendingChanges, handleEditClick, onDelete }) {
       <td className='p-2 border border-gray-300'>{song.fileName}</td>
       <td className='p-2 border border-gray-300 w-1/2'>
         <audio controls className='w-full'>
-          <source src={song.url.startsWith('https') ? song.url : `${BACKEND_URL}/${song.url}`} type={song.fileType} />
+          <source src={song.url} type={song.fileType} />
           Your browser does not support the audio element.
         </audio>
       </td>
